@@ -52,10 +52,12 @@ class Array2D(IArray2D[T]):
 
     def __init__(self, starting_sequence: Sequence[Sequence[T]]=[[]], data_type=object) -> None:
         if not isinstance(starting_sequence, (list, tuple)):
-            raise TypeError("Wanted a sequence of sequences for starting_sequence")
+            raise ValueError("Wanted a sequence of sequences for starting_sequence")
         for row in starting_sequence:
             if not isinstance(row, (list,tuple)):
-                raise TypeError("All items in starting_sequence must be a sequence(list or tuple)")
+                raise ValueError("All items in starting_sequence must be a sequence(list or tuple)")
+            if not all(isinstance(item, data_type) for item in row):
+                raise ValueError("All items must be of the same type")
         if starting_sequence:
             first_row_length=len(starting_sequence[0])
             for row in starting_sequence:
