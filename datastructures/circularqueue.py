@@ -3,7 +3,7 @@ import sys
 import os
 #sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../..")))
 from datastructures.array import Array
-from iqueue import IQueue, T
+from datastructures.iqueue import IQueue, T
 
 class CircularQueue(IQueue[T]):
     """ Represents a fixed-size circular queue. The queue
@@ -37,7 +37,7 @@ class CircularQueue(IQueue[T]):
             raise ValueError("maxsize must be greater than 0")
         self._maxsize=maxsize
         self.data_type=data_type
-        self.circularqueue=Array(starting_sequence=[None]* self._maxsize, data_type=data_type)
+        self.circularqueue=[None]* self._maxsize
         self.front_index=0
         self.rear_index=0
         self._item_count=0
@@ -125,7 +125,7 @@ class CircularQueue(IQueue[T]):
         self.circularqueue=Array(starting_sequence=[None]* self.maxsize, data_type=self.data_type)
         self.front_index=0
         self.rear_index=0
-        self.item_count=0
+        self._item_count=0
 
     @property
     def front(self) -> T:
@@ -305,7 +305,16 @@ class CircularQueue(IQueue[T]):
         '''
         if not isinstance(other, CircularQueue):
             return False
-        return self.circularqueue==other.circularqueue and self._item_count==other._item_count
+        if self._item_count != other._item_count:
+            return False
+        
+        for i in range(self._item_count):
+            if self.circularqueue[(self.front_index + i)% self.maxsize] != other.circularqueue[(other.front_index + i)% other.maxsize]:
+                return False
+        return True
+        
+        if self.maxsize != other.maxsize:
+            return False
     
     def __len__(self) -> int:
         ''' Returns the number of items in the queue
