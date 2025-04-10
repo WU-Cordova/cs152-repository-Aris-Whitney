@@ -24,6 +24,8 @@ class LinkedList[T](ILinkedList[T]):
     def from_sequence(sequence: Sequence[T], data_type: type=object) -> LinkedList[T]:
         linked_list=LinkedList(data_type)
         for item in sequence:
+            if not isinstance(item, data_type):
+                raise TypeError(f"Item {item} is not of type {data_type}")
             linked_list.append(item)
         return linked_list
 
@@ -108,8 +110,17 @@ class LinkedList[T](ILinkedList[T]):
     def remove_all(self, item: T) -> None:
         node=self.head
         while node:
+            next_node=node.next
             if node.data==item:
-                self.remove(item)
+                if node.previous:
+                    node.previous.next=node.next
+                else:
+                    self.head=node.next
+                if node.next:
+                    node.next.previous=node.previous
+                else:
+                    self.tail=node.previous
+                self.size -=1
             node=node.next
 
     def pop(self) -> T:
@@ -164,6 +175,7 @@ class LinkedList[T](ILinkedList[T]):
         if self.travel_node is None:
             raise StopIteration
         data=self.travel_node.data
+        return data
     
     def __reversed__(self) -> ILinkedList[T]:
         node=self.tail
@@ -201,7 +213,7 @@ class LinkedList[T](ILinkedList[T]):
         while current:
             items.append(repr(current.data))
             current = current.next
-        return f"LinkedList({' <-> '.join(items)}) Count: {self.count}"
+        return f"LinkedList({' <-> '.join(items)}) Count: {self.size}"
 
 
 if __name__ == '__main__':
