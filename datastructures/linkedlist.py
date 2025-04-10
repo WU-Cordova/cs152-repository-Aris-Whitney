@@ -74,6 +74,8 @@ class LinkedList[T](ILinkedList[T]):
 
 
     def insert_after(self, target: T, item: T) -> None:
+        if not isinstance(target, self.data_type):
+            raise TypeError(f"Target must be of type {self.data_type}")
         if not isinstance(item, self.data_type):
             raise TypeError(f"Item must be of type {self.data_type}")
         node=self.head
