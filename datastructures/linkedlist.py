@@ -53,6 +53,8 @@ class LinkedList[T](ILinkedList[T]):
             self.head=new_node
         self.size +=1
     def insert_before(self, target: T, item: T) -> None:
+        if not isinstance (target, self.data_type):
+            raise TypeError(f"Target must be of type {self.data_type}")
         if not isinstance(item, self.data_type):
             raise TypeError(f"Item must be of type {self.data_type}")
         node=self.head
@@ -95,6 +97,8 @@ class LinkedList[T](ILinkedList[T]):
         raise ValueError(f"Target {target} not found")
 
     def remove(self, item: T) -> None:
+        if not isinstance(item, self.data_type):
+            raise TypeError(f"Item must be of type {self.data_type}")
         node=self.head
         while node:
             if node.data==item:
@@ -110,6 +114,8 @@ class LinkedList[T](ILinkedList[T]):
         raise ValueError(f"Item {item} not found")
 
     def remove_all(self, item: T) -> None:
+        if not isinstance(item, self.data_type):
+            raise TypeError(f"Item must be of type {self.data_type}")
         node=self.head
         while node:
             next_node=node.next
@@ -177,6 +183,7 @@ class LinkedList[T](ILinkedList[T]):
         if self.travel_node is None:
             raise StopIteration
         data=self.travel_node.data
+        self.travel_node=self.travel_node.next
         return data
     
     def __reversed__(self) -> ILinkedList[T]:
