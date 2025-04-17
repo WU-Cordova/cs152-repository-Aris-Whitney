@@ -142,7 +142,12 @@ class LinkedList[T](ILinkedList[T]):
         if not self.head:
             raise IndexError("Pop from empty list")
         data=self.head.data
-        self.remove(data)
+        if self.head.next:
+            self.head=self.head.next
+            self.head.previous=None
+        else:
+            self.head=self.tail=None
+        self.size -=1
         return data
 
     @property
