@@ -10,37 +10,73 @@ from datastructures.linkedlist import LinkedList
 class HashMap(IHashMap[KT, VT]):
 
     def __init__(self, number_of_buckets=7, load_factor=0.75, custom_hash_function: Optional[Callable[[KT], int]]=None) -> None:
-        raise NotImplementedError("HashMap.__init__() is not implemented yet.")
-
+        self._buckets=Array([LinkedList[Tuple[KT, VT]]() for _ in range(number_of_buckets)])
+        self._size=0
+        self._load_factor=load_factor
     def __getitem__(self, key: KT) -> VT:
-        raise NotImplementedError("HashMap.__getitem__() is not implemented yet.")
+        index=self._default_hash_function(key) % len(self._buckets)
+        bucket=self._buckets[index]
+        for k, v in bucket:
+            if k ==key:
+                return v
+        raise KeyError(key)
+
 
     def __setitem__(self, key: KT, value: VT) -> None:        
-        raise NotImplementedError("HashMap.__setitem__() is not implemented yet.")
-
+        index=self._default_hash_function(key) % len(self._buckets)
+        bucket=self._buckets[index]
+        for k, v in bucket:
+            if k== key:
+                bucket.remove((k, v))
+                bucket.append((key, value))
+                return
+        bucket.append((key, value))
+        self._size +=1
     def keys(self) -> Iterator[KT]:
-        raise
+        return iter(self)
     
     def values(self) -> Iterator[VT]:
-        raise NotImplementedError("HashMap.values() is not implemented yet.")
+        for bucket in self._buckets:
+            for _, v in bucket:
+                yield v
 
     def items(self) -> Iterator[Tuple[KT, VT]]:
-        raise NotImplementedError("HashMap.items() is not implemented yet.")
-            
+        for bucket in self._buckets:
+            for pair in bucket:
+                yield pair
     def __delitem__(self, key: KT) -> None:
-        raise NotImplementedError("HashMap.__delitem__() is not implemented yet.")
+        index=self._default_hash_function(key) % len(self._buckets)
+        bucket=self._buckets[index]
+        for k, v in bucket:
+            if k ==key:
+                bucket.remove((k,v))
+                self._size -=1
+                return
+        raise KeyError(key)
     
     def __contains__(self, key: KT) -> bool:
-        raise NotImplementedError("HashMap.__contains__() is not implemented yet.")
-    
+        index=self._default_hash_function(key) % len(self._buckets)
+        bucket=self._buckets[index]
+        for k, _ in bucket:
+            if k ==key:
+                return True
+        return False
     def __len__(self) -> int:
-        raise NotImplementedError("HashMap.__len__() is not implemented yet.")
+        return self._size
     
     def __iter__(self) -> Iterator[KT]:
-        raise NotImplementedError("HashMap.__iter__() is not implemented yet.")
-    
+        for bucket in self._buckets:
+            for k, _ in bucket:
+                yield k
     def __eq__(self, other: object) -> bool:
-        raise NotImplementedError("HashMap.__eq__() is not implemented yet.")
+        if not isinstance(other, HashMap):
+            return False
+        if len(self) != len(other):
+            return False
+        for key, value in self.items():
+            if key not in other or other [key] != value:
+                return False
+        return True
 
     def __str__(self) -> str:
         return "{" + ", ".join(f"{key}: {value}" for key, value in self) + "}"
