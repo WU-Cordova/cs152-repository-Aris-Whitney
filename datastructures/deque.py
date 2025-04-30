@@ -158,6 +158,20 @@ class Deque[T](IQueue[T]):
             - str: A string representation of the deque.
         """
         return f"Deque({list(self._deque)})"
+    def append(self, item: T)-> None:
+        self.enqueue(item)
+
+    def popleft(self) -> T:
+        """
+        Removes and returns the item from the front of the deque.
+        """
+        if self.empty():
+            raise IndexError("popleft from empty deque")
+        return self._deque.pop_front()
+
+    def __iter__(self):
+        return iter(self._deque)
+
     def __repr__(self) -> str:
         """
         Returns a detailed string representation of the deque.

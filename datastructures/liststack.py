@@ -121,6 +121,8 @@ class ListStack(IStack[T]):
             str: A string representation of the stack.
         """
         return f"ListStack({list(self._stack)})"
+    def __iter__(self):
+        return iter(self._stack)
     def __repr__(self) -> str:
         """
         Returns a detailed string representation of the stack.
